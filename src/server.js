@@ -27,6 +27,7 @@
 import http from 'node:http'
 import { json } from './middlewares/json.js'
 import { routes } from './routes.js'
+import { extractQueryParams } from './utils/extract-query-params.js'
 
 
 // Query Parameters: URL Stateful => Filtros, paginação, não-obrigatórios
@@ -63,7 +64,12 @@ const server = http.createServer(async (req, res) => {
 
     const routeParams = req.url.match(route.path)
     
-    req.params = { ...routeParams.groups }
+    // console.log(extractQueryParams(routeParams.groups.query))
+
+    const { query, ...params } = routeParams.groups
+    
+    req.params = params 
+    req.query = query ? extractQueryParams(query) : {}
     //é usado o { ... } para tirar aquele "Object null prototype"
     // que fica aparecendo junto quando printamos os groups
 
