@@ -49,10 +49,24 @@ const server = http.createServer(async (req, res) => {
   await json(req, res)
 
   const route = routes.find(route => {
-    return route.method == method && route.path == url
+    // esse "test" é uma funçao que as regex tem
+    // ele retorna booleano. neste caso, se a url tiver certo,
+    // retornara true. caso contrario, false.
+    
+    
+    // console.log(route.path.test(url))
+    return route.method == method && route.path.test(url)
+    
   })
 
   if (route) {
+
+    const routeParams = req.url.match(route.path)
+    
+    req.params = { ...routeParams.groups }
+    //é usado o { ... } para tirar aquele "Object null prototype"
+    // que fica aparecendo junto quando printamos os groups
+
     return route.handler(req, res)
   }
 

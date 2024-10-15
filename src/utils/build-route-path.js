@@ -1,9 +1,15 @@
 // /users/:id
 export function buildRoutePath(path) {
     const routeParametersRegex = /:([a-zA-Z]+)/g
+    // console.log(Array.from(path.matchAll(routeParametersRegex)))
 
-    console.log(Array.from(path.matchAll(routeParametersRegex)))
+    const pathWithParams = path.replaceAll(routeParametersRegex, '(?<$1>[a-z0-9\-_]+)')
+    const pathRegex = new RegExp(`^${pathWithParams}`) 
+    
+
+    return pathRegex
 }
+
 
 
 // explicando o const routeParametersRegex = /:([a-zA-Z]+)/g
@@ -22,3 +28,9 @@ export function buildRoutePath(path) {
 // pois estamos dizendo que é uma regex global, entao ela nao vai
 // procurar apenas o primeiro parametro dinamico, ela vai procurar
 // todos!
+// aquele ?<$1> colocado antes é para nomear as coisas. ou seja, se eu tenho
+// users/:id, ele vai pegar o que vem depois dos dois pontos(neste caso, id,
+// e vai usar isso para dar o nome ao grupo. entao no caso ficaria
+// id: numeroqueeupassei. se minha rota tivesse mais um parametro, exemplo:
+// /users/:id/group/:groupId, ele nomearia o id dinamico que passei como "id", 
+// e  o id do grupo que eu passei como groupid, ou seja, exatamente o que eu colocar ali
